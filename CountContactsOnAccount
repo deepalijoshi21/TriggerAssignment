@@ -26,3 +26,15 @@ public class CountContactsOnAccount_Handler {
 }
 
 -----------Trigger------------------
+trigger CountContactsOnAccount on Contact (after insert, after update, after delete) {
+    
+    if(Trigger.isAfter && Trigger.isInsert){
+        CountContactsOnAccount_Handler.countContacts(trigger.new); }
+    
+    if(Trigger.isAfter && Trigger.isUpdate)  {
+        CountContactsOnAccount_Handler.countContacts(trigger.new);    }
+    
+    if(Trigger.isAfter && Trigger.isDelete)    {
+        CountContactsOnAccount_Handler.countContacts(trigger.old);    }
+
+}
