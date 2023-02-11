@@ -1,0 +1,30 @@
+---------------------UpdateOpportunityCity_Handler--------------
+public class UpdateOpportunityCity_Handler {
+      public static void updatecity_Method(List<Account> accounts) {
+    Set<Id> setOfParentId = new Set<Id>();
+    for (Account pt : accounts) {
+      setOfParentId.add(pt.Id);
+    }
+
+    List<Opportunity> listChild = [SELECT Id, AccountId, City__c FROM Opportunity WHERE AccountId IN :setOfParentId];
+
+    List<Opportunity> updatedListChild = new List<Opportunity>();
+    for (Account pt : accounts) {
+      for (Opportunity ch : listChild) {
+          ch.City__c = pt.City__c;
+          updatedListChild.add(ch);
+      }
+    }
+
+    if (updatedListChild.size() > 0) {
+      update updatedListChild;
+    }
+  }
+}
+
+
+------------------------UpdateOpportunityCity-----------------
+trigger UpdateOpportunityCity on Account (after update) {
+    UpdateOpportunityCity_Handler.updatecity_Method(trigger.new);
+
+}
