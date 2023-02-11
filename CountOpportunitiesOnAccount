@@ -2,7 +2,7 @@
 public class CountOpportunitiesOnAccount_Handler {
     public static void countOpportunities(List<Opportunity> opplist){
          Set<Id> accountIds = new Set<Id>();
-
+        try{
         for(Opportunity opportunity : opplist) {
             accountIds.add(opportunity.AccountId);
         }
@@ -24,6 +24,10 @@ public class CountOpportunitiesOnAccount_Handler {
         if(!accUpdate.isEmpty()){
           update accUpdate;
         }
+        }
+        catch(Exception ex){
+            system.debug('Error Occur ====>' +ex.getmessage());
+         }
     }
 }
 
