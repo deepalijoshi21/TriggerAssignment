@@ -1,0 +1,42 @@
+---------------------CountOpportunitiesOnAccount_Handler------------------
+public class CountOpportunitiesOnAccount_Handler {
+    public static void countOpportunities(List<Opportunity> opplist){
+         Set<Id> accountIds = new Set<Id>();
+
+        for(Opportunity opportunity : opplist) {
+            accountIds.add(opportunity.AccountId);
+        }
+
+        List<AggregateResult> aggregateResults = [SELECT AccountId, COUNT(Id) countId 
+                                                  FROM Opportunity 
+                                                  WHERE AccountId IN :accountIds
+                                                  GROUP BY AccountId];
+
+        List<Account> accUpdate = new List<Account>();
+        for(AggregateResult result : aggregateResults) {
+            Account account = new Account(
+                Id = (Id)result.get('AccountId'),
+                	Number_of_Opportunity__c = (Integer)result.get('countId')
+            );
+
+            accUpdate.add(account);
+        }
+        if(!accUpdate.isEmpty()){
+          update accUpdate;
+        }
+    }
+}
+
+-----------------Trigger---------------
+trigger CountOpportunitiesOnAccount on Opportunity (after insert, after delete, after update) {
+    
+    if(Trigger.isAfter && Trigger.isInsert){
+        CountOpportunitiesOnAccount_Handler.countOpportunities(trigger.new); }
+    
+    if(Trigger.isAfter && Trigger.isUpdate)  {
+        CountOpportunitiesOnAccount_Handler.countOpportunities(trigger.new);    }
+    
+    if(Trigger.isAfter && Trigger.isDelete)    {
+        CountOpportunitiesOnAccount_Handler.countOpportunities(trigger.old);    }
+
+}
