@@ -1,30 +1,32 @@
 ---------------------UpdateOpportunityCity_Handler--------------
 public class UpdateOpportunityCity_Handler {
-      public static void updatecity_Method(List<Account> accounts) {
+    public static void updatecity_Method(List<Account> accounts) {
     Set<Id> setOfParentId = new Set<Id>();
-    for (Account ac : accounts) {
-      setOfParentId.add(ac.Id);
+    try{
+          for (Account ac : accounts) {
+            setOfParentId.add(ac.Id);
+          }
+          List<Opportunity> opplist = [SELECT Id, AccountId, City__c FROM Opportunity WHERE AccountId IN :setOfParentId];
+          List<Opportunity> oppupdatedList = new List<Opportunity>();
+          for (Account acc : accounts) {
+            for (Opportunity op : opplist) {
+                op.City__c = acc.City__c;
+                oppupdatedList.add(op);
+            }
+          }
+          if (!oppupdatedList.isEmpty()) {
+            update oppupdatedList;
+          }
     }
-
-    List<Opportunity> opplist = [SELECT Id, AccountId, City__c FROM Opportunity WHERE AccountId IN :setOfParentId];
-
-    List<Opportunity> oppupdatedList = new List<Opportunity>();
-    for (Account acc : accounts) {
-      for (Opportunity op : opplist) {
-          op.City__c = acc.City__c;
-          oppupdatedList.add(op);
-      }
-    }
-
-    if (!oppupdatedList.isEmpty()) {
-      update oppupdatedList;
+    catch(Exception ex){
+      system.debug('Error Occur ==>' +ex.getmessage());
     }
   }
 }
 
 
 ------------------------UpdateOpportunityCity-----------------
-trigger UpdateOpportunityCity on Account (after update) {
+trigger UpdateOpportunityCity on Account (after insert, after update) {
     UpdateOpportunityCity_Handler.updatecity_Method(trigger.new);
 
 }
