@@ -3,12 +3,14 @@ public class DeleteChildContactOfAccount_Handler {
     public static void deleteChildContact(List<Account> deletedAcclist){
           List<Id> accountIds = new List<Id>();
           try{
-        for (Account account : deletedAcclist) {
-            accountIds.add(account.Id);
-        }
+            for (Account account : deletedAcclist) {
+                accountIds.add(account.Id);
+            }
 
-        List<Contact> childContacts = [SELECT Id FROM Contact WHERE AccountId IN :accountIds];
-        delete childContacts;
+            List<Contact> childContactslist = [SELECT Id, AccountId FROM Contact WHERE AccountId IN :accountIds];
+            if(!childContactslist.isEmpty()){
+                delete childContacts;
+            }
         } 
         catch(Exception ex){
           system.debug('Error occur ==' +ex.getmessage());
