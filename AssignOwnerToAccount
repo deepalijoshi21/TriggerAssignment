@@ -6,7 +6,7 @@ public class AssignOwnerToAccount {
               if(ac.id != null && ac.Industry = 'Education')
                 account acc = new account();
                 acc.id = ac.Id;
-                acc.Owner='Deepali';
+                acc.OwnerId='Deepali';
                 acclist.add(acc); 
         }
         if(!acclist.isEmpty()){
@@ -15,7 +15,7 @@ public class AssignOwnerToAccount {
     }
     public static void afterUpdateAccount(List<Account> AccountList){
         for(Account ac: AccountList){
-              ac.Owner='Deepali';
+              ac.OwnerId='Deepali';
         }
      }
 }
