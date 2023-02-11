@@ -1,10 +1,16 @@
 -----------------PreventHighOpportunityAmountHandler-------------
 public class PreventHighOpportunityAmountHandler {
       public static void preventHighAmount(List<Opportunity> newOpportunities) {
-        for(opportunity objopp:newOpportunities)
+      try{
+        for(opportunity objopp:newOpportunities){
             if(objopp.Amount>100000){
-                objopp.addError('Your daily Limit is exceeded');
+                objopp.addError('Your daily Limit of Annount in Opportunity is exceeded');
     		}
+         }
+      }
+      catch(Exception ex){
+            system.debug('Error Occur ==>' +ex.getmessage());
+       }
       }
 }
 
