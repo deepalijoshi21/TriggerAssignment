@@ -1,29 +1,26 @@
 ---------------------CountOpportunitiesOnAccount_Handler------------------
 public class CountOpportunitiesOnAccount_Handler {
     public static void countOpportunities(List<Opportunity> opplist){
-         Set<Id> accountIds = new Set<Id>();
+        Set<Id> accountIds = new Set<Id>();
         try{
-        for(Opportunity opportunity : opplist) {
-            accountIds.add(opportunity.AccountId);
-        }
+            for(Opportunity opportunity : opplist) {
+                accountIds.add(opportunity.AccountId);
+            }
+            //Getting aggregate list using aggregate query
+            List<AggregateResult> aggregateResults = [SELECT AccountId, COUNT(Id) countId 
+                                                      FROM Opportunity WHERE AccountId IN :accountIds GROUP BY AccountId];
+            List<Account> accUpdate = new List<Account>();
+            for(AggregateResult result : aggregateResults) {
+                Account account = new Account(
+                    Id = (Id)result.get('AccountId'),
+                        Number_of_Opportunity__c = (Integer)result.get('countId')
+                );
 
-        List<AggregateResult> aggregateResults = [SELECT AccountId, COUNT(Id) countId 
-                                                  FROM Opportunity 
-                                                  WHERE AccountId IN :accountIds
-                                                  GROUP BY AccountId];
-
-        List<Account> accUpdate = new List<Account>();
-        for(AggregateResult result : aggregateResults) {
-            Account account = new Account(
-                Id = (Id)result.get('AccountId'),
-                	Number_of_Opportunity__c = (Integer)result.get('countId')
-            );
-
-            accUpdate.add(account);
-        }
-        if(!accUpdate.isEmpty()){
-          update accUpdate;
-        }
+                accUpdate.add(account);
+            }
+            if(!accUpdate.isEmpty()){
+              update accUpdate;
+            }
         }
         catch(Exception ex){
             system.debug('Error Occur ====>' +ex.getmessage());
