@@ -1,0 +1,20 @@
+-------------------EmailAlertOnDeleteAccount_Handler-----------
+public class EmailAlertOnDeleteAccount_Handler {
+    public static void sendEmail(List<Account> deletedAccounts) {
+        Messaging.reserveSingleEmailCapacity(deletedAccounts.size());
+        List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
+        for (Account acct : deletedAccounts) {
+            Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+            email.setToAddresses(new String[] {'deepali.joshi@hicglobalsolutions.com'});
+            email.setSubject('Deleted Account Alert');
+            email.setPlainTextBody('This message is to alert you that the account named ' + acct.Name + ' has been deleted.');
+            emails.add(email);
+        }
+        Messaging.sendEmail(emails);
+    }
+}
+
+---------------Trigger--------------
+trigger AccountTrigger on Account (after delete) {
+    EmailAlertOnDeleteAccount_Handler.sendEmail(Trigger.old);
+}
