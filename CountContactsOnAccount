@@ -1,26 +1,25 @@
 ----------------CountContactsOnAccount_Handler---------------
 public class CountContactsOnAccount_Handler {
-    
     public static void countContacts(List<Contact> conList)   {
         List<Account> accList = new List<Account>();
-    	  List<Account> accUpdatedlist = new List<Account>();
+    	List<Account> accUpdatedlist = new List<Account>();
         try{
-        for (Contact con : conList)  {
-            system.debug('ContactsAccountID'+con.AccountId);
-            accountList = [SELECT Id,Name,Number_of_Contacts__c, (SELECT Id, Name FROM Contacts) 
-                           FROM Account WHERE Id =: con.AccountId];
-        }
-        for (Account acc : accList)  {
-            acc.Number_of_Contacts__c = acc.Contacts.size() ;
-            accUpdatedlist.add(acc);
-        }
-        if(!accUpdatedlist.isEmpty()){
-          update accUpdatedlist;
-        }
+            for (Contact con : conList)  {
+                system.debug('Account Id in Contact ===> '+con.AccountId);
+                accountList = [SELECT Id,Name,Number_of_Contacts__c, (SELECT Id, Name FROM Contacts) 
+                               FROM Account WHERE Id =: con.AccountId];
+            }
+            for (Account acc : accList)  {
+                acc.Number_of_Contacts__c = acc.Contacts.size() ;
+                accUpdatedlist.add(acc);
+            }
+            if(!accUpdatedlist.isEmpty()){
+              update accUpdatedlist;
+            }
         }
         catch(Exception ex){
           system.debug('Error Occur ===' +ex.getmessage());
-          }
+        }
     }
 
 }
