@@ -1,12 +1,17 @@
 -------TriggerHandler-------
 public class RestoreOldPhoneNumber_Handler {
     public static void restoreOldNumber_Method(List<Account> newAccounts, Map<Id, Account> oldAccountMap) {
+    try{
         for (Account ac : newAccounts) {
             Account oldAccount = oldAccountMap.get(ac.Id);
             if (ac.Phone != oldAccount.Phone) {
-                ac .Old_Contact_Number__c = oldAccount.Phone;
+                ac.Old_Contact_Number__c = oldAccount.Phone;
             }
         }
+      }
+     catch(Exception ex){
+        system.debug('Error Occur ==' +ex.getmessage());
+      }
     }
 
 }
