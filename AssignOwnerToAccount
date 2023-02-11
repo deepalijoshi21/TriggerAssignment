@@ -1,0 +1,32 @@
+-----------------AssignOwnerToAccount_Handler---------
+public class AssignOwnerToAccount {
+    public static void afterInsertAccount(List<Account> AccountList){
+        List<Account> acclist=new List<Account>();
+        for(Account ac: AccountList){
+              if(ac.id != null && ac.Industry = 'Education')
+                account acc = new account();
+                acc.id = ac.Id;
+                acc.Owner='Deepali';
+                acclist.add(acc); 
+        }
+        if(!acclist.isEmpty()){
+          update acclist;
+         }
+    }
+    public static void afterUpdateAccount(List<Account> AccountList){
+        for(Account ac: AccountList){
+              ac.Owner='Deepali';
+        }
+     }
+}
+
+
+---------Trigger------------
+trigger AccountTrigger on Account (before update,after Insert) {
+  if(trigger.isAfter && trigger.isInsert){
+       AssignOwnerToAccount.afterInsertAccount(trigger.new);
+     }
+   if(trigger.isBefore && trigger.isUpdate){
+       AssignOwnerToAccount.afterUpdateAccount(trigger.new);
+    }
+}
