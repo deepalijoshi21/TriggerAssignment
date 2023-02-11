@@ -2,22 +2,22 @@
 public class UpdateOpportunityCity_Handler {
       public static void updatecity_Method(List<Account> accounts) {
     Set<Id> setOfParentId = new Set<Id>();
-    for (Account pt : accounts) {
-      setOfParentId.add(pt.Id);
+    for (Account ac : accounts) {
+      setOfParentId.add(ac.Id);
     }
 
-    List<Opportunity> listChild = [SELECT Id, AccountId, City__c FROM Opportunity WHERE AccountId IN :setOfParentId];
+    List<Opportunity> opplist = [SELECT Id, AccountId, City__c FROM Opportunity WHERE AccountId IN :setOfParentId];
 
-    List<Opportunity> updatedListChild = new List<Opportunity>();
-    for (Account pt : accounts) {
-      for (Opportunity ch : listChild) {
-          ch.City__c = pt.City__c;
-          updatedListChild.add(ch);
+    List<Opportunity> oppupdatedList = new List<Opportunity>();
+    for (Account acc : accounts) {
+      for (Opportunity op : opplist) {
+          op.City__c = acc.City__c;
+          oppupdatedList.add(op);
       }
     }
 
-    if (updatedListChild.size() > 0) {
-      update updatedListChild;
+    if (!oppupdatedList.isEmpty()) {
+      update oppupdatedList;
     }
   }
 }
