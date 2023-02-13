@@ -3,20 +3,20 @@ public Class CreateOpportunitiesHandler {
     public static void createOpportunities(List<Account> acclist) {
         List<Opportunity> opplist = new List<Opportunity>();
         try{
-        for (Account acct : acclist) {
-        //Loop for inserting 20 Opportunities in Account
-            for (Integer i = 1; i <= 20; i++) {
-                Opportunity opp = new Opportunity();
-                opp.Name = 'Opportunity ' + i + ' for ' + acct.Name;
-                opp.CloseDate = System.today().addMonths(4);
-                opp.StageName = 'Prospecting';
-                opp.AccountId = acct.Id;
-                opplist.add(opp);
+            for (Account acct : acclist) {
+            //Loop for inserting 20 Opportunities in Account
+                for (Integer i = 1; i <= 20; i++) {
+                    Opportunity opp = new Opportunity();
+                    opp.Name = 'Opportunity ' + i + ' for ' + acct.Name;
+                    opp.CloseDate = System.today().addMonths(4);
+                    opp.StageName = 'Prospecting';
+                    opp.AccountId = acct.Id;
+                    opplist.add(opp);
+                }
             }
-        }
-        if(!opplist.isEmpty()){
-          insert opplist;
-        }
+            if(!opplist.isEmpty()){
+              insert opplist;
+            }
         }
         catch(Exception ex){
           system.debug('Error Occur ===' +ex.getmessage());
