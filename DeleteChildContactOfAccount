@@ -9,7 +9,11 @@ public class DeleteChildContactOfAccount_Handler {
 
             List<Contact> childContactslist = [SELECT Id, AccountId FROM Contact WHERE AccountId IN :accountIds];
             if(!childContactslist.isEmpty()){
-                delete childContacts;
+                delete childContactslist;
+            }
+            List<Opportunity> childOpportunitylist = [SELECT Id, AccountId FROM Opportunity WHERE AccountId IN :accountIds];
+            if(!childOpportunitylist.isEmpty()){
+                delete childOpportunitylist;
             }
         } 
         catch(Exception ex){
