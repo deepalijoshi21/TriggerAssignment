@@ -1,23 +1,39 @@
 -----------------AssignOwnerToAccount_Handler---------
 public class AssignOwnerToAccount {
     public static void afterInsertAccount(List<Account> AccountList){
-        List<Account> acclist=new List<Account>();
+        List<Account> acclist=new List<Account>(); 
         Id owner = [Select id from user where username = 'hema.rawat@gmail.com'];
-        for(Account ac: AccountList){
-              if(owner != null && ac.Industry = 'Education')
-                account acc = new account();
-                acc.id = ac.Id;
-                acc.OwnerId= owner;
-                acclist.add(acc); 
+        try{
+            if(owner != null){
+                for(Account ac: AccountList){
+                      if(ac.id != null && ac.Industry = 'Education'){
+                        account acc = new account();
+                        acc.id = ac.Id;
+                        acc.OwnerId= owner;
+                        acclist.add(acc); 
+                      }
+                }
+            }
+            if(!acclist.isEmpty()){
+              update acclist;
+             }
         }
-        if(!acclist.isEmpty()){
-          update acclist;
-         }
+        catch(Exception ex){
+            system.debug('Error Occur =' +ex.getmessage());
+        }
     }
     public static void afterUpdateAccount(List<Account> AccountList){
-        for(Account ac: AccountList){
-              ac.OwnerId='Deepali';
+    Id owner = [Select id from user where username = 'hema.rawat@gmail.com'];
+    try{
+        if(owner != null){
+            for(Account ac: AccountList){
+                  ac.OwnerId= owner;
+            }
         }
+     }
+     catch(Exception ex){
+        system.debug('Error Occur ==>' +ex.getmessage());
+      }
      }
 }
 
