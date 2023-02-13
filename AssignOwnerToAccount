@@ -1,49 +1,22 @@
 -----------------AssignOwnerToAccount_Handler---------
 public class AssignOwnerToAccount {
-    public static void afterInsertAccount(List<Account> AccountList){
-        List<Account> acclist=new List<Account>(); 
-        Id owner = [Select id from user where username = 'hema.rawat@gmail.com'];
+       public static void beforeInsertAccount(list< Account> acclist){
         try{
-            if(owner != null){
-                for(Account ac: AccountList){
-                      if(ac.id != null && ac.Industry = 'Education'){
-                        account acc = new account();
-                        acc.id = ac.Id;
-                        acc.OwnerId= owner;
-                        acclist.add(acc); 
-                      }
+            User customuser = [select id, Username from user where Username='hema.rawat@gmail.com'];
+            for(Account ac: acclist){
+                if(ac.Industry != null && ac.Industry == 'Education'){
+                    ac.OwnerId = customuser.id;
                 }
             }
-            if(!acclist.isEmpty()){
-              update acclist;
-             }
         }
-        catch(Exception ex){
-            system.debug('Error Occur =' +ex.getmessage());
+        catch(exception ex){
+            system.debug('error messages ==>'+ex.getMessage()+' In Line Number '+ex.getLineNumber());
         }
     }
-    public static void afterUpdateAccount(List<Account> AccountList){
-    Id owner = [Select id from user where username = 'hema.rawat@gmail.com'];
-    try{
-        if(owner != null){
-            for(Account ac: AccountList){
-                  ac.OwnerId= owner;
-            }
-        }
-     }
-     catch(Exception ex){
-        system.debug('Error Occur ==>' +ex.getmessage());
-      }
-     }
 }
 
 
 ---------Trigger------------
-trigger AccountTrigger on Account (before update,after Insert) {
-  if(trigger.isAfter && trigger.isInsert){
-       AssignOwnerToAccount.afterInsertAccount(trigger.new);
-     }
-   if(trigger.isBefore && trigger.isUpdate){
-       AssignOwnerToAccount.afterUpdateAccount(trigger.new);
-    }
+trigger AccountTrigger on Account (before Insert) {
+  AssignOwnerToAccount.beforeInsertAccount(trigger.new);
 }
