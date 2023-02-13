@@ -2,11 +2,12 @@
 public class AssignOwnerToAccount {
     public static void afterInsertAccount(List<Account> AccountList){
         List<Account> acclist=new List<Account>();
+        Id owner = [Select id from user where username = 'hema.rawat@gmail.com'];
         for(Account ac: AccountList){
-              if(ac.id != null && ac.Industry = 'Education')
+              if(owner != null && ac.Industry = 'Education')
                 account acc = new account();
                 acc.id = ac.Id;
-                acc.OwnerId='Deepali';
+                acc.OwnerId= owner;
                 acclist.add(acc); 
         }
         if(!acclist.isEmpty()){
