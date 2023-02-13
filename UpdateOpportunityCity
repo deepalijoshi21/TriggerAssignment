@@ -1,32 +1,42 @@
 ---------------------UpdateOpportunityCity_Handler--------------
 public class UpdateOpportunityCity_Handler {
-    public static void updatecity_Method(List<Account> accounts) {
-    Set<Id> setOfParentId = new Set<Id>();
-    try{
-          for (Account ac : accounts) {
-            setOfParentId.add(ac.Id);
+    public static void updateCity(List<Account> accList , Map<Id , Account> accOldMap){
+      List<Opportunity> oppCityUpdate = new List<Opportunity>();
+      Map<Id , Account> accMap = new Map<Id , Account>();
+      for(Account acc : accList)      
+      {
+          if(acc.City__c != accOldMap.get(acc.Id).City__c)
+          {
+              accMap.put(acc.Id, acc);
+          }       
+      }
+      if(!accMap.isEmpty())
+      {
+          Set<Id> accIds = accMap.keySet();
+          List<Opportunity> opplist = [Select Id , AccountId From Opportunity Where AccountId =:accIds];
+          try{
+              if(!opplist.isEmpty())
+              {
+                  for(Opportunity opp : opplist)                
+                  {
+                      opp.City__c = accMap.get(opp.AccountId).City__c;
+                      oppCityUpdate.add(opp);                
+                  }
+                  update oppCityUpdate;
+              }
           }
-          List<Opportunity> opplist = [SELECT Id, AccountId, City__c FROM Opportunity WHERE AccountId IN :setOfParentId];
-          List<Opportunity> oppupdatedList = new List<Opportunity>();
-          for (Account acc : accounts) {
-            for (Opportunity op : opplist) {
-                op.City__c = acc.City__c;
-                oppupdatedList.add(op);
-            }
+          catch(Exception ex){
+            system.debug('Error Occur ==>' +ex.getmessage());
           }
-          if (!oppupdatedList.isEmpty()) {
-            update oppupdatedList;
-          }
-    }
-    catch(Exception ex){
-      system.debug('Error Occur ==>' +ex.getmessage());
-    }
+      }
+
   }
+
 }
 
+ -----------------------------------------------------------Trigger----------------------------------------------
+        
+ trigger testAccTrigger on Account (after update) {
 
-------------------------UpdateOpportunityCity-----------------
-trigger UpdateOpportunityCity on Account (after insert, after update) {
-    UpdateOpportunityCity_Handler.updatecity_Method(trigger.new);
-
+   UpdateOpportunityCity_Handler.updateCity(Trigger.new , Trigger.oldmap);
 }
