@@ -1,0 +1,23 @@
+-----------------------DeleteChildleadsurveyOnLeadHandler--------------
+public class ChildDeleteOnLeadHandler {
+        public static void deleteChild(List<Lead> deletedLeadlist){
+          List<Id> leadIds = new List<Id>();
+          try{
+            for (Lead le : deletedLeadlist) {
+                leadIds.add(le.Id);
+            }
+            List<Leadsurvey__c> childlist = [SELECT Id, Name, Lead_Lookup__c FROM Leadsurvey__c WHERE Lead_Lookup__c IN :leadIds];
+            if(childlist.size()>0){
+                database.delete(childlist,false);
+            }
+        } 
+        catch(Exception ex){
+          system.debug('Error occur ==' +ex.getmessage());
+        }
+    }
+}
+
+---------------Trigger-----------
+trigger DeleteChildContactOfAccount on Account (before delete) {
+    ChildDeleteOnLeadHandler.deleteChild(trigger.old);
+}
