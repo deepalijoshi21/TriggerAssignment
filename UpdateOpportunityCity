@@ -3,27 +3,26 @@ public class UpdateOpportunityCity_Handler {
     public static void updateCity(List<Account> accList , Map<Id , Account> accOldMap){
       List<Opportunity> oppCityUpdate = new List<Opportunity>();
       Map<Id , Account> accMap = new Map<Id , Account>();
-      for(Account acc : accList)      
-      {
-          if(acc.City__c != accOldMap.get(acc.Id).City__c)
+      try{
+          for(Account acc : accList)      
           {
-              accMap.put(acc.Id, acc);
-          }       
-      }
-      if(!accMap.isEmpty())
-      {
-          Set<Id> accIds = accMap.keySet();
-          List<Opportunity> opplist = [Select Id , AccountId From Opportunity Where AccountId =:accIds];
-          try{
-              if(!opplist.isEmpty())
+              if(acc.City__c != accOldMap.get(acc.Id).City__c)
               {
-                  for(Opportunity opp : opplist)                
-                  {
+                  accMap.put(acc.Id, acc);
+              }       
+          }
+          if(!accMap.isEmpty())
+          {
+              Set<Id> accIds = accMap.keySet();
+              List<Opportunity> opplist = [Select Id , AccountId From Opportunity Where AccountId =:accIds];
+              if(!opplist.isEmpty()){
+                  for(Opportunity opp : opplist){
                       opp.City__c = accMap.get(opp.AccountId).City__c;
                       oppCityUpdate.add(opp);                
-                  }
-                  update oppCityUpdate;
+                   }
+                   update oppCityUpdate;
               }
+            }
           }
           catch(Exception ex){
             system.debug('Error Occur ==>' +ex.getmessage());
@@ -36,7 +35,6 @@ public class UpdateOpportunityCity_Handler {
 
  -----------------------------------------------------------Trigger----------------------------------------------
         
- trigger testAccTrigger on Account (after update) {
-
+Trigger testAccTrigger on Account (after update) {
    UpdateOpportunityCity_Handler.updateCity(Trigger.new , Trigger.oldmap);
 }
