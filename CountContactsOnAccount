@@ -6,7 +6,7 @@ public class CountContactsOnAccount_Handler {
         try{
             for (Contact con : conList)  {
                 system.debug('Account Id in Contact ===> '+con.AccountId);
-                accountList = [SELECT Id,Name,Number_of_Contacts__c, (SELECT Id, Name FROM Contacts) 
+                accList = [SELECT Id,Name,Number_of_Contacts__c, (SELECT Id, Name FROM Contacts) 
                                FROM Account WHERE Id =: con.AccountId];
             }
             for (Account acc : accList)  {
