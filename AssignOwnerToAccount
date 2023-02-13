@@ -2,11 +2,13 @@
 public class AssignOwnerToAccount {
        public static void beforeInsertAccount(list< Account> acclist){
         try{
-            User customuser = [select id, Username from user where Username='hema.rawat@gmail.com'];
-            for(Account ac: acclist){
-                if(ac.Industry != null && ac.Industry == 'Education'){
-                    ac.OwnerId = customuser.id;
-                }
+            User customUser = [select id, Username from user where Username='hema.rawat@gmail.com'];
+            if(customUser != null){
+                   for(Account ac: acclist){
+                       if(ac.Industry != null && ac.Industry == 'Education'){
+                           ac.OwnerId = customUser.id;
+                       }
+                   }
             }
         }
         catch(exception ex){
