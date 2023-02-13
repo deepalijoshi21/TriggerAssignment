@@ -1,6 +1,6 @@
 -----------------------DeleteChildContactOfAccount_Handler--------------
 public class DeleteChildContactOfAccount_Handler {
-    public static void deleteChildContact(List<Account> deletedAcclist){
+    public static void deleteChild(List<Account> deletedAcclist){
           List<Id> accountIds = new List<Id>();
           try{
             for (Account account : deletedAcclist) {
@@ -24,6 +24,6 @@ public class DeleteChildContactOfAccount_Handler {
 
 ---------------Trigger-----------
 trigger DeleteChildContactOfAccount on Account (before delete) {
-    DeleteChildContactOfAccount_Handler.deleteChildContact(trigger.old);
+    DeleteChildContactOfAccount_Handler.deleteChild(trigger.old);
 
 }
