@@ -1,4 +1,4 @@
---------------------CreateOpportunitiesOnAccount--------------
+--------------------CreateOpportunities--------------
 public Class CreateOpportunitiesHandler {
     public static void createOpportunities() {
         List<Opportunity> opplist = new List<Opportunity>();
