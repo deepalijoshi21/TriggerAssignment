@@ -5,22 +5,18 @@ public class EmailAlertOnDeleteAccount_Handler {
         User userlist=[select id,Name,Username,email from user where id=:deletedAccounts[0].OwnerId];
         List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
         list<string> emailAdds = new list<string>();
-		for(Contact con :[select id,email,AccountId from contact where email!=null AND AccountId=:accid]){
-             emailAdds.add(con.email);
-        }
-          
         try{
-			if(userlist != null){
-            for (Account acct : deletedAccounts) {
-				accid.add(acct.id);
-                emailAdds.add(userlist.email);
-                Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-                email.setToAddresses(emailAdds);
-                email.setSubject('Deleted Account Alert');
-                email.setPlainTextBody('This message is to alert you that the account named ' + acct.Name + ' has been deleted.');
-                emails.add(email);
-            }
-            Messaging.sendEmail(emails);
+		if(userlist != null){
+            	for (Account acct : deletedAccounts) {
+			accid.add(acct.id);
+			emailAdds.add(userlist.email);
+			Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+			email.setToAddresses(emailAdds);
+			email.setSubject('Deleted Account Alert');
+			email.setPlainTextBody('This message is to alert you that the account named ' + acct.Name + ' has been deleted.');
+			emails.add(email);
+            	}
+            	Messaging.sendEmail(emails);
             }
         }
         catch(Exception ex){
