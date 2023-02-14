@@ -28,7 +28,26 @@ public class EmailAlertOnDeleteAccount_Handler {
         }
     }
 }
-
+/*
+//Create a trigger that will send an Email alert on the deletion of the account.  
+public class DeletionEmailAlertHandler {
+  public static void sendDeletionAlert(List<Account> deletedAccounts) {
+    Set<Id> deletedAccountIds = new Set<Id>();
+    List<Messaging.SingleEmailMessage> emailMessages = new List<Messaging.SingleEmailMessage>();
+    for (Account deletedAccount : deletedAccounts) {
+      if (deletedAccount.Id != null) {
+        deletedAccountIds.add(deletedAccount.Id);
+      }
+      Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+      email.setToAddresses(new String[] {'sandeep.sharma@hicglobalsolutions.com'});
+      email.setSubject('Deleted Account Alert');
+      email.setPlainTextBody('This message is to alert you that the account named ' + deletedAccount.Name + ' has been deleted.');
+      emailMessages.add(email);
+    }
+    Messaging.sendEmail(emailMessages);
+  }
+}
+*/
 ---------------Trigger--------------
 trigger AccountTrigger on Account (after delete) {
     EmailAlertOnDeleteAccount_Handler.sendEmail(Trigger.old);
