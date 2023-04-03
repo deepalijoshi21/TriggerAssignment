@@ -1,0 +1,41 @@
+public class NewBusinessTriggerHandler { 
+    public static void Newbusinessrecordinsert(list<Opportunity> newlist){
+        list<Opportunity> insertopp = new list<Opportunity>();
+        id NewBusinessRecordId = [select id,name from RecordType where name='New Business'].id;
+        id RenewalId = [select id,name from RecordType where name='Renewal'].id;
+
+        for(opportunity renewalobj : newlist){
+            if(renewalobj.RecordTypeId == NewBusinessRecordId && renewalobj.StageName == 'Closed Won'){
+                opportunity obj = renewalobj.clone();
+                obj.RecordTypeId = RenewalId;
+                obj.StageName = 'Renewal';
+                obj.Name = renewalobj.Name+'-Renewal';
+                obj.CloseDate = renewalobj.CloseDate.addDays(30);
+                insertopp.add(obj);
+            }
+        }
+        if(!insertopp.isEmpty()){
+      		insert insertopp;
+    }
+    }
+    
+   public static void Newbusinessrecordupdate(list<Opportunity> newlist, map<id,Opportunity> oldmap){
+        list<Opportunity> updateopp = new list<Opportunity>();
+        id NewBusinessRecordId =[select id,name from RecordType where name='New Business'].id;
+        id RenewalId =[select id,name from RecordType where name='Renewal'].id; 
+       
+		for(opportunity renewalupdateobj : newlist){
+            if(renewalupdateobj.StageName != oldmap.get(renewalupdateobj.id).StageName && renewalupdateobj.RecordTypeId == NewBusinessRecordId && renewalupdateobj.StageName=='Closed Won' ){
+                opportunity obj = renewalupdateobj.clone();
+                obj.RecordTypeId = RenewalId;
+                obj.StageName = 'Renewal';
+                obj.Name = renewalupdateobj.Name+'-Renewal';
+                obj.CloseDate = renewalupdateobj.CloseDate.addDays(30);
+                updateopp.add(obj);
+                }
+            }
+       if(!updateopp.isEmpty()){
+      		insert updateopp;
+       }
+       }
+}
