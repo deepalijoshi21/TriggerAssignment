@@ -1,4 +1,4 @@
--------------------------------Renew Opportunity along with quote Line Item----------------------
+-------------------------------Renew Opportunity along with Opportunity Line Item----------------------
 
 public class NewBusinessTriggerHandler { 
    		
